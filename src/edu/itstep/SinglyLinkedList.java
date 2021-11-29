@@ -16,72 +16,88 @@ public class SinglyLinkedList<T> implements Iterable<T> {
     }
 
     private Node first = null;
+    private Node last = null;
+
+    private void ensureCorrectFirstAndLastState() {
+        //Если first еще не установлен, но last
+        //уже куда-то ссылается, устанавливаем
+        //first = last
+        if (first == null && last != null) {
+            first = last;
+        }
+
+        //Аналогично для last
+        if (last == null && first != null) {
+            last = first;
+        }
+
+        //То есть first и last либо вместе являются null,
+        //либо вместе являются не-null. Не должно быть такого,
+        //что одна ссылка установлена, а другая - нет
+    }
+
     private int size = 0;
 
     public void addFirst(T value) {
         Node node = new Node(value, first);
         first = node;
 
+        ensureCorrectFirstAndLastState();
         ++size;
     }
 
     public void addLast(T value) {
         Node node = new Node(value, null);
 
-        if (first == null) {
-            first = node;
-        }
-        else {
-            Node last = getNode(size - 1);
+        if (last != null) {
             last.next = node;
         }
 
+        last = node;
+
+        ensureCorrectFirstAndLastState();
         ++size;
     }
 
     public T removeFirst() {
-        throwCannotRemoveElementIfFirstIsNull();
+        throwNoSuchElementIfListIsEmpty();
 
         T removedValue = first.value;
 
         Node newFirst = first.next;
         first = newFirst;
 
+        ensureCorrectFirstAndLastState();
         --size;
 
         return removedValue;
     }
 
     public T removeLast() {
-        throwCannotRemoveElementIfFirstIsNull();
+        throwNoSuchElementIfListIsEmpty();
+
+        T removedValue = last.value;
 
         if (size == 1) {
-            T removedValue = first.value;
-            first = null;
+            last = null;
+        }
+        else {
+            Node lastButOne = getNode(size - 2);
+            lastButOne.next = null;
 
-            --size;
-
-            return removedValue;
+            last = lastButOne;
         }
 
-        Node lastButOne = getNode(size - 2);
-
-        T removedValue = lastButOne.next.value;
-        lastButOne.next = null;
-
+        ensureCorrectFirstAndLastState();
         --size;
 
         return removedValue;
     }
 
-    private void throwCannotRemoveElementIfFirstIsNull() {
+    private void throwNoSuchElementIfListIsEmpty() {
         if (first == null) {
             throw new NoSuchElementException("Cannot remove element because list is empty");
         }
-    }
-
-    public T get(int index) {
-        return getNode(index).value;
     }
 
     private Node getNode(int index) {
@@ -96,6 +112,14 @@ public class SinglyLinkedList<T> implements Iterable<T> {
         }
 
         return node;
+    }
+
+    public T get(int index) {
+        if (index == size - 1) {
+            return last.value;
+        }
+
+        return getNode(index).value;
     }
 
     public int size() {
