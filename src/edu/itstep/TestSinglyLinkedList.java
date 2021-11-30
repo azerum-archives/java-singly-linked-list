@@ -120,14 +120,13 @@ public class TestSinglyLinkedList {
             list.addLast(i);
         }
 
-        int expectedValue = 0;
+        int i = 0;
 
         for (int value : list) {
-            assertEquals(expectedValue, value);
-            ++expectedValue;
+            assertEquals(i, value);
+            ++i;
         }
 
-        int lastValueExclusive = expectedValue;
-        assertEquals(count, lastValueExclusive,  "iterator must traverse " + count + " elements");
+        assertEquals(count, i,  "iterator must traverse " + count + " elements");
     }
 }
