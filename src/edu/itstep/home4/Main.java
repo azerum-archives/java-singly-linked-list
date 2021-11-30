@@ -1,4 +1,4 @@
-package edu.itstep;
+package edu.itstep.home4;
 
 public class Main {
     public static void main(String[] args) {

@@ -1,4 +1,4 @@
-package edu.itstep;
+package edu.itstep.home4;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
